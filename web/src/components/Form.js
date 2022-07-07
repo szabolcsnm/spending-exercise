@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { InputStyles } from '../styles/InputStyles';
-import { SelectStyles } from '../styles/SelectStyles';
-import { FormStyles } from '../styles/ComponentStyles';
+import React, {useState} from 'react';
+import {InputStyles} from '../styles/InputStyles';
+import {SelectStyles} from '../styles/SelectStyles';
+import {FormStyles} from '../styles/ComponentStyles';
+import { createSpending } from '../service/crud';
 
 export default function Form() {
   const [state, setState] = useState({
@@ -11,12 +12,16 @@ export default function Form() {
   });
 
   function handleChange(e) {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
 
     setState({
       ...state,
       [name]: value,
     });
+  }
+
+  function handleSubmit(e) {
+    
   }
 
   return (
@@ -35,16 +40,13 @@ export default function Form() {
           name='amount'
           value={state.amount}
           onChange={handleChange}
+          min='0'
         />
-        <SelectStyles
-          name='currency'
-          value={state.currency}
-          onChange={handleChange}
-        >
+        <SelectStyles name='currency' value={state.currency} onChange={handleChange}>
           <option value='HUF'>HUF</option>
           <option value='USD'>USD</option>
         </SelectStyles>
-        <InputStyles type='submit' value='Save' />
+        <InputStyles type='submit' value='Save' onSubmit={handleSubmit}/>
       </FormStyles>
     </>
   );

@@ -1,5 +1,10 @@
 import styled from 'styled-components';
 
+export const InputWrapperStyles = styled.div`
+  ${props => props.type === 'description' ? 'flex: 1' : 'width: 150px'};
+  position: relative;
+`;
+
 export const InputStyles = styled.input`
   font-family: var(--font-family);
   border: none;
@@ -10,18 +15,25 @@ export const InputStyles = styled.input`
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   color: darkgray;
+  ${props => props.error && 'border: 2px solid red;'}
 
   &:focus {
     border-radius: 8px;
     color: var(--color-blue);
   }
 
+  &:focus::placeholder {
+    color: transparent;
+  }
+
   &[type='text'] {
-    flex: 1;
+    /* flex: 1; */
+    width: 100%;
   }
 
   &[type='number'] {
-    width: 150px;
+    /* width: 150px; */
+    width: 100%;
   }
 
   &[type='submit'] {
@@ -39,3 +51,5 @@ export const InputStyles = styled.input`
     }
   }
 `;
+
+

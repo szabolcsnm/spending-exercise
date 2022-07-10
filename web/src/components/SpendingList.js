@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { FiDollarSign } from "react-icons/fi";
-import { DateTime } from "luxon";
-import Loader from "./Loader";
+import React, {useState, useEffect} from 'react';
+import {FiDollarSign} from 'react-icons/fi';
+import {DateTime} from 'luxon';
+import Loader from './Loader';
+import {readSpending, readSpending2} from '../service/crud';
 
 import {
   ErrorMessage,
@@ -10,11 +11,33 @@ import {
   TextWrapper,
   Amount,
   AmountWrapper,
-} from "../styles/ComponentStyles";
+} from '../styles/ComponentStyles';
 
-export default function SpendingList({ spendings, setSpendings }) {
-  // const [loading, setLoading] = useState(true);
+export default function SpendingList({spendings, setSpendings, tempData}) {
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   const removeValueEvent = readSpending('spendings', async (snapshot) => {
+  //     await setSpendings(Object.entries(snapshot.val()));
+  //   });
+  //   setLoading(false);
+  //   return () => removeValueEvent();
+  // }, [setSpendings]);
+
+  useEffect(() => {
+    setLoading(true);
+    readSpending2('spendings')
+      .then((snapshot) => setSpendings(Object.entries(snapshot.val() || [])))
+      .catch((err) => {
+        console.log(err);
+        setError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      })
+  }, [setSpendings, tempData]);
 
   // useEffect(() => {
   //   setLoading(true);
@@ -41,43 +64,40 @@ export default function SpendingList({ spendings, setSpendings }) {
   //     .finally(() => {
   //       setLoading(false);
   //     });
+  //   setLoading(false);
   // }, []);
 
-  // if (loading) return <Loader />;
+  if (loading) return <Loader />;
 
   return (
     <>
       {error && (
-        <ErrorMessage>
-          The server is probably down. Please try again later.
-        </ErrorMessage>
+        <ErrorMessage>The server is probably down. Please try again later.</ErrorMessage>
       )}
       {!spendings.length && !error && (
-        <h1 style={{ textAlign: "center", marginTop: "4rem" }}>
-          Yay!{" "}
-          <span role="img" aria-label="jsx-a11y/accessible-emoji">
+        <h1 style={{textAlign: 'center', marginTop: '4rem'}}>
+          Yay!{' '}
+          <span role='img' aria-label='jsx-a11y/accessible-emoji'>
             🎉
-          </span>{" "}
+          </span>{' '}
           No spendings!
         </h1>
       )}
       {spendings.length > 0 &&
         spendings.map((spending) => (
-          <Spending key={spending.id}>
+          <Spending key={`spending_${spending[0]}`}>
             <IconWrapper>
-              <FiDollarSign color="var(--color-blue)" />
+              <FiDollarSign color='var(--color-blue)' />
             </IconWrapper>
             <TextWrapper>
-              <h3>{spending.description}</h3>
+              <h3>{spending[1].description}</h3>
               <p>
-                {DateTime.fromISO(spending.spent_at).toFormat(
-                  "t - MMMM dd, yyyy"
-                )}
+                {DateTime.fromISO(spending[1].spent_at).toFormat('t - MMMM dd, yyyy')}
               </p>
             </TextWrapper>
             <AmountWrapper>
-              <Amount currency={spending.currency}>
-                {(spending.amount / 100).toFixed(2)}
+              <Amount currency={spending[1].currency}>
+                {(spending[1].amount).toFixed(2)}
               </Amount>
             </AmountWrapper>
           </Spending>

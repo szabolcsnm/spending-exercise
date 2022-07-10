@@ -1,5 +1,5 @@
 import {database} from '../config/firebase';
-import {ref, set, push, update, remove, onValue} from 'firebase/database';
+import {ref, set, get, push, update, remove, onValue} from 'firebase/database';
 
 /* Create Spending */
 export function createSpending(endpoint, dataObject) {
@@ -12,6 +12,11 @@ export function createSpending(endpoint, dataObject) {
 export function readSpending(endpoint, callback) {
   const refdata = ref(database, endpoint);
   return onValue(refdata, callback);
+}
+
+export function readSpending2(endpoint) {
+  const refdata = ref(database, endpoint);
+  return get(refdata);
 }
 
 /* Update Spending */

@@ -3,6 +3,7 @@ import {FiDollarSign} from 'react-icons/fi';
 import {DateTime} from 'luxon';
 import Loader from './Loader';
 import {readSpending, readSpending2} from '../service/crud';
+import { filterFunction } from '../App';
 
 import {
   ErrorMessage,
@@ -13,7 +14,7 @@ import {
   AmountWrapper,
 } from '../styles/ComponentStyles';
 
-export default function SpendingList({spendings, setSpendings, tempData}) {
+export default function SpendingList({spendings, setSpendings, tempData, filterParams}) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -29,7 +30,7 @@ export default function SpendingList({spendings, setSpendings, tempData}) {
   useEffect(() => {
     setLoading(true);
     readSpending2('spendings')
-      .then((snapshot) => setSpendings(Object.entries(snapshot.val() || [])))
+      .then((snapshot) => setSpendings(filterFunction(Object.entries(snapshot.val() || []), filterParams)))
       .catch((err) => {
         console.log(err);
         setError(true);
@@ -37,7 +38,7 @@ export default function SpendingList({spendings, setSpendings, tempData}) {
       .finally(() => {
         setLoading(false);
       })
-  }, [setSpendings, tempData]);
+  }, [setSpendings, tempData, filterParams]);
 
   // useEffect(() => {
   //   setLoading(true);

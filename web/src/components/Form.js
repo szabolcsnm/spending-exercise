@@ -11,7 +11,7 @@ export default function Form({
   setFormValues,
   setToggle,
   idToUpdate,
-  setIdToUpdate
+  setIdToUpdate,
 }) {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -48,7 +48,7 @@ export default function Form({
     e.preventDefault();
     setFormErrors(validateInput(formValues));
     setIsSubmit(true);
-  }
+  };
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
@@ -62,7 +62,7 @@ export default function Form({
         createSpending('spendings', {...formValues, spent_at: currentDate})
           .then(() => console.log('Data has been saved!'))
           .catch((err) => console.log(err));
-      } 
+      }
       setFormValues({
         description: '',
         amount: '',
@@ -96,7 +96,7 @@ export default function Form({
             value={formValues.amount}
             onChange={handleChange}
             min='0.00'
-            step='0.1'
+            step={formValues.currency === 'HUF' ? '1' : '0.1'}
             error={formErrors.amount}
           />
           {formErrors.amount && <FormErrorStyles>{formErrors.amount}</FormErrorStyles>}

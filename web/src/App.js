@@ -17,8 +17,8 @@ export default function App() {
     select: '-date',
     currency: 'ALL',
   });
-  const [toggle, setToggle] = useState(false);
   const [idToUpdate, setIdToUpdate] = useState('');
+  const [toggle, setToggle] = useState(false);
 
   return (
     <>
@@ -26,9 +26,9 @@ export default function App() {
         <Form
           formValues={formValues}
           setFormValues={setFormValues}
-          setToggle={setToggle}
           idToUpdate={idToUpdate}
           setIdToUpdate={setIdToUpdate}
+          setToggle={setToggle}
         />
 
         <FiltersAndOrderings
@@ -39,11 +39,11 @@ export default function App() {
         <SpendingList
           spendings={spendings}
           setSpendings={setSpendings}
+          setFormValues={setFormValues}
+          filterParams={filterParams}
+          setIdToUpdate={setIdToUpdate}
           toggle={toggle}
           setToggle={setToggle}
-          filterParams={filterParams}
-          setFormValues={setFormValues}
-          setIdToUpdate={setIdToUpdate}
         />
       </Layout>
     </>

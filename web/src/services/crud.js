@@ -9,13 +9,13 @@ export function createSpending(endpoint, dataObject) {
 }
 
 /* Read Spending Live*/
-export function readSpending(endpoint, callback) {
+export function readSpendingLive(endpoint, callback) {
   const refdata = ref(database, endpoint);
   return onValue(refdata, callback);
 }
 
 /* Read Spending Once */
-export function readSpending2(endpoint) {
+export function readSpendingOnce(endpoint) {
   const refdata = ref(database, endpoint);
   return get(refdata);
 }

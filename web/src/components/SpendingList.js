@@ -4,11 +4,7 @@ import {BiEditAlt} from 'react-icons/bi';
 import {MdClear} from 'react-icons/md';
 import {DateTime} from 'luxon';
 import Loader from './Loader';
-import {
-  readSpending,
-  readSpending2,
-  deleteSpending,
-} from '../services/crud';
+import {readSpendingOnce, deleteSpending} from '../services/crud';
 import {filterFunction} from '../services/filter';
 
 import {
@@ -18,7 +14,7 @@ import {
   TextWrapper,
   Amount,
   AmountWrapper,
-  ModifyWrapper
+  ModifyWrapper,
 } from '../styles/ComponentStyles';
 
 export default function SpendingList({
@@ -28,25 +24,19 @@ export default function SpendingList({
   setToggle,
   filterParams,
   setFormValues,
-  setIdToUpdate
+  setIdToUpdate,
 }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   const removeValueEvent = readSpending('spendings', async (snapshot) => {
-  //     await setSpendings(Object.entries(snapshot.val()));
-  //   });
-  //   setLoading(false);
-  //   return () => removeValueEvent();
-  // }, [setSpendings]);
-
   useEffect(() => {
     setLoading(true);
-    readSpending2('spendings')
-      .then(async (snapshot) =>
-        await setSpendings(filterFunction(Object.entries(snapshot.val() || []), filterParams))
+    readSpendingOnce('spendings')
+      .then(
+        async (snapshot) =>
+          await setSpendings(
+            filterFunction(Object.entries(snapshot.val() || []), filterParams)
+          )
       )
       .catch((err) => {
         console.log(err);
@@ -69,40 +59,12 @@ export default function SpendingList({
 
   const handleDelete = (id) => {
     deleteSpending('spendings', id)
-    .then(() => {
-      setToggle(prev => !prev);
-      console.log('Data has been deleted!');
-    })
-    .catch((err) => console.log(err));
+      .then(() => {
+        setToggle((prev) => !prev);
+        console.log('Data has been deleted!');
+      })
+      .catch((err) => console.log(err));
   };
-
-  // useEffect(() => {
-  //   setLoading(true);
-  //   fetch(`http://localhost:5000/spendings`, {
-  //     method: "GET",
-  //     headers: { "Content-Type": "application/json" },
-  //   })
-  //     .then(async (res) => {
-  //       const body = await res.json();
-  //       return {
-  //         status: res.status,
-  //         body,
-  //       };
-  //     })
-  //     .then((response) => {
-  //       if (response.status === 200) {
-  //         setSpendings(response.body);
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //       setError(true);
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  //   setLoading(false);
-  // }, []);
 
   if (loading) return <Loader />;
 
@@ -139,7 +101,10 @@ export default function SpendingList({
                 {spending[1].amount.toFixed(2)}
               </Amount>
             </AmountWrapper>
-            <ModifyWrapper color='--color-green' onClick={() => handleUpdate(spending[0])}>
+            <ModifyWrapper
+              color='--color-green'
+              onClick={() => handleUpdate(spending[0])}
+            >
               <BiEditAlt />
             </ModifyWrapper>
             <ModifyWrapper color='--color-red' onClick={() => handleDelete(spending[0])}>

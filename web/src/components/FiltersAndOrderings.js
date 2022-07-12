@@ -29,6 +29,7 @@ export default function CurrencyFilter({filterParams, setFilterParams}) {
               name='currency'
               value='ALL'
               onClick={clickHandler}
+              filterParams={filterParams.currency}
             >
               ALL
             </CurrencyButton>
@@ -38,6 +39,7 @@ export default function CurrencyFilter({filterParams, setFilterParams}) {
               name='currency'
               value='HUF'
               onClick={clickHandler}
+              filterParams={filterParams.currency}
             >
               HUF
             </CurrencyButton>
@@ -47,6 +49,7 @@ export default function CurrencyFilter({filterParams, setFilterParams}) {
               name='currency'
               value='USD'
               onClick={clickHandler}
+              filterParams={filterParams.currency}
             >
               USD
             </CurrencyButton>

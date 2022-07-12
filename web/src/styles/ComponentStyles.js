@@ -27,14 +27,14 @@ export const CurrencyButton = styled.button`
   font-size: 20px;
   cursor: pointer;
   background-color: ${(p) =>
-    p.name === p.currencyFilter ? '#d1e7fb' : 'var(--color-white)'};
+    p.value === p.filterParams ? '#d1e7fb' : 'var(--color-white)'};
   color: ${(p) =>
-    p.name === p.currencyFilter ? 'var(--color-blue)' : 'inherit'};
-  font-weight: ${(p) => (p.name === p.currencyFilter ? '700' : '400')};
+    p.value === p.filterParams ? 'var(--color-blue)' : 'inherit'};
+  font-weight: ${(p) => (p.value === p.filterParams ? '700' : '400')};
   border-radius: 8px;
   padding: 6px 12px;
-  /* box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; */
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 `;
 
 export const Orderings = styled.div`
@@ -55,8 +55,8 @@ export const Orderings = styled.div`
     font-size: 18px;
     border-radius: 8px;
     border: 1px solid darkgray;
-    /* box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-      rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; */
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+      rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 `;
 
@@ -141,7 +141,7 @@ export const LdsDualRing = styled.div`
 
 export const LoaderStyles = styled.div`
   position: absolute;
-  top: 0;
+  top: 300px;
   left: 0;
   right: 0;
   bottom: 0;

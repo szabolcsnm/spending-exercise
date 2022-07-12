@@ -14,12 +14,15 @@ export const InputStyles = styled.input`
   border-radius: 8px;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-  color: darkgray;
+  color: var(--color-blue);
   ${props => props.error && 'border: 2px solid red;'}
 
   &:focus {
     border-radius: 8px;
-    color: var(--color-blue);
+  }
+
+  &::placeholder {
+    color: darkgray;
   }
 
   &:focus::placeholder {

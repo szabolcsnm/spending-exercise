@@ -1,9 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import {FiDollarSign} from 'react-icons/fi';
+import {BiEditAlt} from 'react-icons/bi';
+import {MdClear} from 'react-icons/md';
 import {DateTime} from 'luxon';
 import Loader from './Loader';
-import {readSpending, readSpending2} from '../service/crud';
-import { filterFunction } from '../App';
+import {
+  readSpending,
+  readSpending2,
+  deleteSpending,
+} from '../services/crud';
+import {filterFunction} from '../services/filter';
 
 import {
   ErrorMessage,
@@ -14,7 +20,15 @@ import {
   AmountWrapper,
 } from '../styles/ComponentStyles';
 
-export default function SpendingList({spendings, setSpendings, tempData, filterParams}) {
+export default function SpendingList({
+  spendings,
+  setSpendings,
+  toggle,
+  setToggle,
+  filterParams,
+  setFormValues,
+  setIdToUpdate
+}) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -30,15 +44,36 @@ export default function SpendingList({spendings, setSpendings, tempData, filterP
   useEffect(() => {
     setLoading(true);
     readSpending2('spendings')
-      .then((snapshot) => setSpendings(filterFunction(Object.entries(snapshot.val() || []), filterParams)))
+      .then((snapshot) =>
+        setSpendings(filterFunction(Object.entries(snapshot.val() || []), filterParams))
+      )
       .catch((err) => {
         console.log(err);
         setError(true);
       })
       .finally(() => {
         setLoading(false);
-      })
-  }, [setSpendings, tempData, filterParams]);
+      });
+  }, [setSpendings, toggle, filterParams]);
+
+  const handleUpdate = (id) => {
+    setIdToUpdate(id);
+    const spendingToUpdate = spendings.filter((item) => item[0] === id);
+    setFormValues({
+      description: spendingToUpdate[0][1].description,
+      amount: spendingToUpdate[0][1].amount,
+      currency: spendingToUpdate[0][1].currency,
+    });
+  };
+
+  const handleDelete = (id) => {
+    deleteSpending('spendings', id)
+    .then(() => {
+      setToggle(prev => !prev);
+      console.log('Data has been deleted!');
+    })
+    .catch((err) => console.log(err));
+  };
 
   // useEffect(() => {
   //   setLoading(true);
@@ -93,14 +128,22 @@ export default function SpendingList({spendings, setSpendings, tempData, filterP
             <TextWrapper>
               <h3>{spending[1].description}</h3>
               <p>
-                {DateTime.fromISO(spending[1].spent_at).toFormat('t - MMMM dd, yyyy')}
+                {DateTime.fromISO(spending[1].spent_at)
+                  .setLocale('en')
+                  .toFormat('t - MMMM dd, yyyy')}
               </p>
             </TextWrapper>
             <AmountWrapper>
               <Amount currency={spending[1].currency}>
-                {(spending[1].amount).toFixed(2)}
+                {spending[1].amount.toFixed(2)}
               </Amount>
             </AmountWrapper>
+            <IconWrapper onClick={() => handleUpdate(spending[0])}>
+              <BiEditAlt color='var(--color-blue)' />
+            </IconWrapper>
+            <IconWrapper onClick={() => handleDelete(spending[0])}>
+              <MdClear color='var(--color-blue)' />
+            </IconWrapper>
           </Spending>
         ))}
     </>

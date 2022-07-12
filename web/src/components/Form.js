@@ -1,24 +1,23 @@
 import React, {useEffect, useState} from 'react';
+import {createSpending, updateSpending} from '../services/crud';
+
 import {InputStyles, InputWrapperStyles} from '../styles/InputStyles';
 import {SelectStyles} from '../styles/SelectStyles';
 import {FormStyles} from '../styles/ComponentStyles';
 import {FormErrorStyles} from '../styles/FormErrorStyles';
-import {createSpending} from '../service/crud';
 
-const defaultValues = {
-  description: '',
-  amount: '',
-  currency: 'USD',
-};
-
-export default function Form({setTempData}) {
+export default function Form({
+  formValues,
+  setFormValues,
+  setToggle,
+  idToUpdate,
+  setIdToUpdate
+}) {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
-  const [formValues, setFormValues] = useState(defaultValues);
 
   function handleChange(e) {
     const {name, value} = e.target;
-    console.log(e.target.value);
     if (name === 'amount') {
       setFormValues({
         ...formValues,
@@ -45,7 +44,7 @@ export default function Form({setTempData}) {
     return errors;
   };
 
-  function handleFormSubmit(e) {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
     setFormErrors(validateInput(formValues));
     setIsSubmit(true);
@@ -54,17 +53,22 @@ export default function Form({setTempData}) {
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       const currentDate = new Date(Date.now()).toISOString();
-
-      createSpending('spendings', {...formValues, spent_at: currentDate})
-        .then(() => console.log('Data saved successfully'))
-        .catch((err) => console.log(err));
-
+      if (idToUpdate) {
+        updateSpending('spendings', idToUpdate, {...formValues, spent_at: currentDate})
+        .then(() => console.log('Data has been updated!'))
+        .catch((err) => console.log(err))
+        .finally(() => setIdToUpdate(''));
+      } else {
+        createSpending('spendings', {...formValues, spent_at: currentDate})
+          .then(() => console.log('Data has been saved!'))
+          .catch((err) => console.log(err));
+      } 
       setFormValues({
         description: '',
         amount: '',
         currency: formValues.currency,
       });
-      setTempData(formValues);
+      setToggle(prev => !prev);
     }
   }, [formErrors, isSubmit]);
 
@@ -91,7 +95,8 @@ export default function Form({setTempData}) {
             name='amount'
             value={formValues.amount}
             onChange={handleChange}
-            min='0'
+            min='0.00'
+            step='0.1'
             error={formErrors.amount}
           />
           {formErrors.amount && <FormErrorStyles>{formErrors.amount}</FormErrorStyles>}
@@ -100,7 +105,7 @@ export default function Form({setTempData}) {
           <option value='HUF'>HUF</option>
           <option value='USD'>USD</option>
         </SelectStyles>
-        <InputStyles type='submit' value='Save' />
+        <InputStyles type='submit' value={idToUpdate ? 'Update' : 'Save'} />
       </FormStyles>
     </>
   );

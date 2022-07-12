@@ -200,6 +200,39 @@ export const IconWrapper = styled.div`
   }
 `;
 
+export const ModifyWrapper = styled.div`
+  padding: 8px;
+  line-height: 0;
+  background-color: var(--color-background);
+  border-radius: 12px;
+  color: var(--color-darkgrey);
+  cursor: pointer;
+  transition: all 0.3s;
+  
+  &:last-child {
+    margin-left: .5rem;
+  }
+
+  &:hover {
+    background-color: ${p => `var(${p.color})`};
+    color: var(--color-white);
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  @media (max-width: 756px) {
+    margin: 0;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+`;
+
 export const TextWrapper = styled.div`
   @media (max-width: 756px) {
     text-align: center;

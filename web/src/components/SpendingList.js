@@ -18,6 +18,7 @@ import {
   TextWrapper,
   Amount,
   AmountWrapper,
+  ModifyWrapper
 } from '../styles/ComponentStyles';
 
 export default function SpendingList({
@@ -44,8 +45,8 @@ export default function SpendingList({
   useEffect(() => {
     setLoading(true);
     readSpending2('spendings')
-      .then((snapshot) =>
-        setSpendings(filterFunction(Object.entries(snapshot.val() || []), filterParams))
+      .then(async (snapshot) =>
+        await setSpendings(filterFunction(Object.entries(snapshot.val() || []), filterParams))
       )
       .catch((err) => {
         console.log(err);
@@ -138,12 +139,12 @@ export default function SpendingList({
                 {spending[1].amount.toFixed(2)}
               </Amount>
             </AmountWrapper>
-            <IconWrapper onClick={() => handleUpdate(spending[0])}>
-              <BiEditAlt color='var(--color-blue)' />
-            </IconWrapper>
-            <IconWrapper onClick={() => handleDelete(spending[0])}>
-              <MdClear color='var(--color-blue)' />
-            </IconWrapper>
+            <ModifyWrapper color='--color-green' onClick={() => handleUpdate(spending[0])}>
+              <BiEditAlt />
+            </ModifyWrapper>
+            <ModifyWrapper color='--color-red' onClick={() => handleDelete(spending[0])}>
+              <MdClear />
+            </ModifyWrapper>
           </Spending>
         ))}
     </>

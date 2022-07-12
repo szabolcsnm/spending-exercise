@@ -22,7 +22,7 @@ export const InputStyles = styled.input`
   }
 
   &::placeholder {
-    color: darkgray;
+    color: var(--color-darkgrey);
   }
 
   &:focus::placeholder {
@@ -40,7 +40,7 @@ export const InputStyles = styled.input`
   }
 
   &[type='submit'] {
-    background-color: #08b783;
+    background-color: var(--color-green);
     color: var(--color-white);
     cursor: pointer;
     transition: all 0.3s;
